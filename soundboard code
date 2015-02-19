@@ -1,0 +1,614 @@
+//
+//  PWSHoofdSchermViewController.m
+//  Soundboard_PWS
+//
+//  Created by Hans Twelker on 14-09-14.
+//  Copyright (c) 2014 twelker. All rights reserved.
+//
+
+#import "PWSHoofdSchermViewController.h"
+
+// Zoek in Google: "ios uibutton play sound"
+#import <AVFoundation/AVFoundation.h>
+
+@interface PWSHoofdSchermViewController ()
+
+
+
+
+
+{
+    
+    UIButton *pushToProcess;
+    UIButton *julius;
+    UIButton *geluid1;
+    UIButton *geluid2;
+    UIButton *geluid3;
+    UIButton *geluid4;
+    UIButton *geluid5;
+    UIButton *geluid6;
+    UIButton *geluid7;
+    UIButton *stopgeluid;
+}
+
+@property (strong,nonatomic) AVAudioPlayer *player;
+@property (strong,nonatomic) AVAudioPlayer *player2;  // om 2 geluiden tegelijk af te spelen
+@property (strong,nonatomic) AVAudioPlayer *player1;
+@property (strong,nonatomic) AVAudioPlayer *player3;
+@property (strong,nonatomic) AVAudioPlayer *player4;
+@property (strong,nonatomic) AVAudioPlayer *player5;
+@property (strong,nonatomic) AVAudioPlayer *player6;
+
+@end
+
+@implementation PWSHoofdSchermViewController
+
+BOOL pushToProcessBlauw = YES;
+BOOL juliusBlauw = YES;
+BOOL geluid1Blauw = YES;
+BOOL geluid2Blauw = YES;
+BOOL geluid3Blauw = YES;
+BOOL geluid4Blauw = YES;
+BOOL geluid5Blauw = YES;
+BOOL geluid6Blauw = YES;
+BOOL geluid7Blauw = YES;
+
+
+
+
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];http://www.stempels.nl/images/Muzieknoot-klein.jpg
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    
+    
+    UIImageView *logootjeImageView = [UIImageView new];
+    UIImage *logootje = [UIImage imageNamed:@"app_icon.jpg"];
+    logootjeImageView.image = logootje;
+    logootjeImageView.frame = CGRectMake(145, 70, 50, 50);
+    [self.view addSubview:logootjeImageView];
+    
+
+    
+    // Create push to process button
+    
+    
+    pushToProcess = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
+    [pushToProcess addTarget:self
+                      action:@selector(pushToProcessSelected)       // See below
+            forControlEvents:UIControlEventTouchUpInside];          // Processed only when the mouse button is released
+    
+    pushToProcess.frame = CGRectMake(15, 150, 90, 90);            // x, y, lengte van het veld, hoogte van het veld
+    
+    //[pushToProcess setTitle:@"" forState:UIControlStateNormal];
+    
+    UIImage *pushToProcessPlaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+    [pushToProcess setBackgroundImage:pushToProcessPlaatje forState:UIControlStateNormal];
+    
+    [self.view addSubview:pushToProcess];
+    
+    
+    
+    julius = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
+    [julius addTarget:self
+               action:@selector(juliusSelected)       // See below
+     forControlEvents:UIControlEventTouchUpInside];          // Processed only when the mouse button is released
+    
+    julius.frame = CGRectMake(15, 230, 90, 90);            // x, y, lengte van het veld, hoogte van het veld
+    
+    
+    UIImage *juliusPlaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+    [julius setBackgroundImage:juliusPlaatje forState:UIControlStateNormal];
+
+    
+    [self.view addSubview:julius];
+    
+    
+    
+    
+    geluid1 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [geluid1 addTarget:self
+                      action:@selector(geluid1Selected)       // See below
+            forControlEvents:UIControlEventTouchUpInside];          // Processed only when the mouse button is released
+    
+    geluid1.frame = CGRectMake(15, 310, 90, 90);            // x, y, lengte van het veld, hoogte van het veld
+    
+    //[geluid1 setTitle:@"Doe iets" forState:UIControlStateNormal];
+    
+    UIImage *geluid1Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+    [geluid1 setBackgroundImage:geluid1Plaatje forState:UIControlStateNormal];
+    
+    [self.view addSubview:geluid1];
+    
+    
+    
+
+    geluid2 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
+    [geluid2 addTarget:self
+                      action:@selector(geluid2Selected)       // See below
+            forControlEvents:UIControlEventTouchUpInside];          // Processed only when the mouse button is released
+    
+    geluid2.frame = CGRectMake(15, 390, 90, 90);            // x, y, lengte van het veld, hoogte van het veld
+    
+    //[geluid2 setTitle:@"" forState:UIControlStateNormal];
+    
+    UIImage *geluid2Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+    [geluid2 setBackgroundImage:geluid2Plaatje forState:UIControlStateNormal];
+    
+    [self.view addSubview:geluid2];
+
+    
+    
+    
+    
+    
+    geluid3 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [geluid3 addTarget:self
+                action:@selector(geluid3Selected)       // See below
+      forControlEvents:UIControlEventTouchUpInside];          // Processed only when the mouse button is released
+    
+    geluid3.frame = CGRectMake(125, 150, 90, 90);            // x, y, lengte van het veld, hoogte van het veld
+    
+    //[geluid3 setTitle:@"" forState:UIControlStateNormal];
+    
+    UIImage *geluid3Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+    [geluid3 setBackgroundImage:geluid3Plaatje forState:UIControlStateNormal];
+    
+    
+    [self.view addSubview:geluid3];
+    
+    
+    
+    
+    geluid4 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [geluid4 addTarget:self
+                action:@selector(geluid4Selected)       // See below
+      forControlEvents:UIControlEventTouchUpInside];          // Processed only when the mouse button is released
+    
+    geluid4.frame = CGRectMake(125, 230, 90, 90);            // x, y, lengte van het veld, hoogte van het veld
+    
+    //[geluid4 setTitle:@"Doe iets" forState:UIControlStateNormal];
+    
+    UIImage *geluid4Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+    [geluid4 setBackgroundImage:geluid4Plaatje forState:UIControlStateNormal];
+    
+    
+    
+    [self.view addSubview:geluid4];
+    
+    
+    
+    
+    
+    geluid5 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    
+    [geluid5 addTarget:self
+                      action:@selector(geluid5Selected)       // See below
+            forControlEvents:UIControlEventTouchUpInside];          // Processed only when the mouse button is released
+    
+    geluid5.frame = CGRectMake(125, 310, 90, 90);            // x, y, lengte van het veld, hoogte van het veld
+    
+    //[geluid5 setTitle:@"" forState:UIControlStateNormal];
+    
+    UIImage *geluid5Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+    [geluid5 setBackgroundImage:geluid5Plaatje forState:UIControlStateNormal];
+    
+    [self.view addSubview:geluid5];
+    
+    
+    
+    geluid6 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [geluid6 addTarget:self
+                action:@selector(geluid6Selected)       // See below
+      forControlEvents:UIControlEventTouchUpInside];          // Processed only when the mouse button is released
+    
+    geluid6.frame = CGRectMake(235, 150, 90, 90);            // x, y, lengte van het veld, hoogte van het veld
+    
+    //[geluid6 setTitle:@"Doe iets" forState:UIControlStateNormal];
+    
+    UIImage *geluid6Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+    [geluid6 setBackgroundImage:geluid6Plaatje forState:UIControlStateNormal];
+    
+    
+    
+    [self.view addSubview:geluid6];
+    
+    
+    
+    geluid7 = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [geluid7 addTarget:self
+                action:@selector(geluid7Selected)       // See below
+      forControlEvents:UIControlEventTouchUpInside];          // Processed only when the mouse button is released
+    
+    geluid7.frame = CGRectMake(235, 230, 90, 90);            // x, y, lengte van het veld, hoogte van het veld
+    
+    //[geluid7 setTitle:@"Doe iets" forState:UIControlStateNormal];
+    
+    UIImage *geluid7Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+    [geluid7 setBackgroundImage:geluid7Plaatje forState:UIControlStateNormal];
+    
+    
+    
+    [self.view addSubview:geluid7];
+    
+    stopgeluid = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [stopgeluid addTarget:self
+                action:@selector(stopgeluidSelected)       // See below
+      forControlEvents:UIControlEventTouchUpInside];          // Processed only when the mouse button is released
+    
+    stopgeluid.frame = CGRectMake(225, 390, 90, 90);            // x, y, lengte van het veld, hoogte van het veld
+    
+    
+    UIImage *stopgeluidPlaatje = [UIImage imageNamed:@"stop_knop2.jpg"];
+    [stopgeluid setBackgroundImage:stopgeluidPlaatje forState:UIControlStateNormal];
+    
+    
+    
+    [self.view addSubview:stopgeluid];
+
+
+}
+
+
+
+- (void)pushToProcessSelected
+
+{
+   
+    
+    if (pushToProcessBlauw)
+    {
+        UIImage *pushToProcessPlaatje = [UIImage imageNamed:@"geluidknop1.jpg"];
+        [pushToProcess setBackgroundImage:pushToProcessPlaatje forState:UIControlStateNormal]; //plaatje veranderen naar rood plaatje
+        
+        [self.view addSubview:pushToProcess];
+        
+        pushToProcessBlauw = NO;
+    
+    NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"PWS drum Geluid-4" ofType:@"m4a"]; //muziek als het word ingedrukt
+        
+        
+    
+    NSURL *soundUrl = [NSURL fileURLWithPath:soundPath];
+    
+    
+    
+    self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:nil];
+    
+    [self.player play];
+    
+    }
+
+    else   //nog een keer indrukken weer resetten naar begin
+    {
+        UIImage *pushToProcessPlaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+        [pushToProcess setBackgroundImage:pushToProcessPlaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:pushToProcess];
+        
+        pushToProcessBlauw = YES;
+    
+    [self.player stop];
+    
+    }
+}
+
+- (void)juliusSelected
+
+{
+    // Maak de kleur van de letters rood
+    
+    if (juliusBlauw)
+    {
+        UIImage *juliusPlaatje = [UIImage imageNamed:@"geluidknop1.jpg"];
+        [julius setBackgroundImage:juliusPlaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:julius];
+        
+        juliusBlauw = NO;
+        
+        NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"Pws" ofType:@"m4a"];
+        
+        NSURL *soundUrl = [NSURL fileURLWithPath:soundPath];
+        
+      
+        
+        self.player2 = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:nil];
+        
+        [self.player2 play];
+    }
+    else
+    {
+        UIImage *juliusPlaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+        [julius setBackgroundImage:juliusPlaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:julius];
+        
+        juliusBlauw = YES;
+        
+        [self.player2 stop];
+    }
+    
+    
+}
+
+
+- (void)geluid1Selected
+
+{
+    // Maak de kleur van de letters rood
+    
+    if (geluid1Blauw)
+    {
+        UIImage *geluid1Plaatje = [UIImage imageNamed:@"geluidknop1.jpg"];
+        [geluid1 setBackgroundImage:geluid1Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid1];
+        
+        geluid1Blauw = NO;
+        
+        NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"Pwsgeluidcalvin" ofType:@"m4a"];
+        
+        NSURL *soundUrl = [NSURL fileURLWithPath:soundPath];
+        
+        self.player1 = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:nil];
+        
+        [self.player1 play];
+    }
+    else
+    {
+        UIImage *geluid1Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+        [geluid1 setBackgroundImage:geluid1Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid1];
+        
+        geluid1Blauw = YES;
+        [self.player1 stop];
+    }
+
+
+}
+
+- (void)geluid2Selected
+
+{
+    // Maak de kleur van de letters rood
+    
+    if (geluid2Blauw)
+    {
+        UIImage *geluid2Plaatje = [UIImage imageNamed:@"geluidknop1.jpg"];
+        [geluid2 setBackgroundImage:geluid2Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid2];
+        
+        geluid2Blauw = NO;
+        
+        NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"Beat120bpm" ofType:@"m4a"];
+        
+        NSURL *soundUrl = [NSURL fileURLWithPath:soundPath];
+        
+        self.player3 = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:nil];
+        
+        [self.player3 play];
+
+    }
+    else
+    {
+        UIImage *geluid2Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+        [geluid2 setBackgroundImage:geluid2Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid2];
+        
+        geluid2Blauw = YES;
+        
+        [self.player3 stop];
+    }
+    
+    
+}
+- (void)geluid3Selected
+
+{
+    // Maak de kleur van de letters rood
+    
+    if (geluid3Blauw)
+    {
+        UIImage *geluid3Plaatje = [UIImage imageNamed:@"geluidknop1.jpg"];
+        [geluid3 setBackgroundImage:geluid3Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid3];
+        
+        geluid3Blauw = NO;
+        NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"Pwsguidlead2" ofType:@"m4a"];
+        
+        NSURL *soundUrl = [NSURL fileURLWithPath:soundPath];
+        
+        self.player4 = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:nil];
+        
+        [self.player4 play];
+    }
+    else
+    {
+        UIImage *geluid3Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+        [geluid3 setBackgroundImage:geluid3Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid3];
+        
+        geluid3Blauw = YES;
+         [self.player4 stop];
+    }
+    
+    
+}
+- (void)geluid4Selected
+
+{
+    // Maak de kleur van de letters rood
+    
+    if (geluid4Blauw)
+    {
+        UIImage *geluid4Plaatje = [UIImage imageNamed:@"geluidknop1.jpg"];
+        [geluid4 setBackgroundImage:geluid4Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid4];
+        
+        geluid4Blauw = NO;
+        NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"Pwsgeluid3" ofType:@"m4a"];
+        
+        NSURL *soundUrl = [NSURL fileURLWithPath:soundPath];
+        
+        self.player5 = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:nil];
+        
+        [self.player5 play];
+    }
+    else
+    {
+        UIImage *geluid4Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+        [geluid4 setBackgroundImage:geluid4Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid4];
+        
+        geluid4Blauw = YES;
+         [self.player5 stop];
+    }
+    
+    
+}
+- (void)geluid5Selected
+
+{
+    // Maak de kleur van de letters rood
+    
+    if (geluid5Blauw)
+    {
+        UIImage *geluid5Plaatje = [UIImage imageNamed:@"geluidknop1.jpg"];
+        [geluid5 setBackgroundImage:geluid5Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid5];
+        
+        geluid5Blauw = NO;
+        NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"Beat130bpm" ofType:@"m4a"];
+        
+        NSURL *soundUrl = [NSURL fileURLWithPath:soundPath];
+        
+        self.player6 = [[AVAudioPlayer alloc] initWithContentsOfURL:soundUrl error:nil];
+        
+        [self.player6 play];
+    }
+    else
+    {
+        UIImage *geluid5Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+        [geluid5 setBackgroundImage:geluid5Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid5];
+        
+        geluid5Blauw = YES;
+              [self.player6 stop];
+    }
+}
+
+- (void)geluid6Selected
+
+{
+    // Maak de kleur van de letters rood
+    
+    if (geluid6Blauw)
+    {
+        UIImage *geluid6Plaatje = [UIImage imageNamed:@"geluidknop1.jpg"];
+        [geluid6 setBackgroundImage:geluid6Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid6];
+        
+        geluid6Blauw = NO;
+    }
+    else
+    {
+        UIImage *geluid6Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+        [geluid6 setBackgroundImage:geluid6Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid6];
+        
+        geluid6Blauw = YES;
+    }
+    
+    
+}
+
+
+- (void)geluid7Selected
+
+{
+    // Maak de kleur van de letters rood
+    
+    if (geluid7Blauw)
+    {
+        UIImage *geluid7Plaatje = [UIImage imageNamed:@"geluidknop1.jpg"];
+       
+        
+        
+        [geluid7 setBackgroundImage:geluid7Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid7];
+        
+        geluid7Blauw = NO;
+    }
+    else
+    {
+        UIImage *geluid7Plaatje = [UIImage imageNamed:@"geluidplaatje2.jpg"];
+        [geluid7 setBackgroundImage:geluid7Plaatje forState:UIControlStateNormal];
+        
+        [self.view addSubview:geluid7];
+        
+        geluid7Blauw = YES;
+    }
+    
+}
+
+- (void)stopgeluidSelected
+
+{
+    [self.player stop];
+    [self.player2 stop];
+    [self.player1 stop];
+    [self.player3 stop];
+    [self.player4 stop];
+    [self.player5 stop];
+    [self.player6 stop];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end
